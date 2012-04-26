@@ -1,7 +1,12 @@
 #!/bin/bash
-XENSTOREREAD="/usr/bin/xenstore-read"
+XENSTOREREAD=`which xenstore-read`
 if [ -e $XENSTOREREAD ]; then
-	echo `$XENSTOREREAD name` > /etc/hostname
+  NAME=`$XENSTOREREAD name`
+  OLDNAME=`/bin/hostname -s`
+  DOAMIN=`/bin/hostname -d`
+
+	/bin/sed -i "s/$OLDNAME/$NAME/g" /etc/hosts
+  echo "$NAME.$DOMAIN" > /etc/hostname
 	/bin/hostname -F /etc/hostname
 fi
 exit 0

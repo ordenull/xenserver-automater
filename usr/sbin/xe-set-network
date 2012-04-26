@@ -1,5 +1,5 @@
 #!/bin/bash
-XENSTOREREAD="/usr/bin/xenstore-read"
+XENSTOREREAD=`which xenstore-read`
 
 [ -x $XENSTOREREAD ] || exit 0
 
