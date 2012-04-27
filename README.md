@@ -1,9 +1,10 @@
 ## Create and start a new VM with custom xenstore data:
-	UUID=`xe vm-install template=mytemplate  new-name-label=newvm`
-	xe vm-param-set uuid=$UUID xenstore-data:vm-data/ip=192.168.1.20
-	xe vm-param-set uuid=$UUID xenstore-data:vm-data/gw=192.168.1.254
-	xe vm-param-set uuid=$UUID xenstore-data:vm-data/nm=255.255.255.0
-	xe vm-start uuid=$UUID
+    UUID=`xe vm-install template=mytemplate  new-name-label=newvm`
+    xe vm-param-set uuid=$UUID xenstore-data:vm-data/ip=192.168.1.20
+    xe vm-param-set uuid=$UUID xenstore-data:vm-data/gw=192.168.1.254
+    xe vm-param-set uuid=$UUID xenstore-data:vm-data/nm=255.255.255.0
+    xe vm-param-set uuid=$UUID xenstore-data:vm-data/ns=192.168.1.254
+    xe vm-start uuid=$UUID
 
 ## Install scripts on guest VM:
 

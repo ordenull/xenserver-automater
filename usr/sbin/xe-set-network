@@ -6,10 +6,12 @@ XENSTOREREAD=`which xenstore-read`
 IP=`$XENSTOREREAD vm-data/ip`
 GW=`$XENSTOREREAD vm-data/gw`
 NM=`$XENSTOREREAD vm-data/nm`
+NS=`$XENSTOREREAD vm-data/ns`
 
-for DATA in $IP $GW $NM; do
-        [ "$DATA" = "" ] && exit 0
-done
+[ "$IP" = "" ] && exit 0
+[ "$GW" = "" ] && exit 0
+[ "$NM" = "" ] && exit 0
+[ "$NS" = "" ] && exit 0
 
 cat << EOF > /etc/network/interfaces
 auto lo
@@ -20,6 +22,7 @@ iface eth0 inet static
         address $IP
         netmask $NM
         gateway $GW
+        dns-nameservers $NS
 EOF
 
 /etc/init.d/networking restart
