@@ -4,19 +4,19 @@ if [ -e $XENSTOREREAD ]; then
   NAME=`$XENSTOREREAD name`
   NEWDOMAIN=`$XENSTOREREAD vm-data/dm`
 
-  [ "$NAME" = "" ] && exit 0
-  [ "$NEWDOMAIN" = "" ] && exit 0
-
   OLDNAME=`/bin/hostname -s`
   OLDDOMAIN=`bin/hostname -d`
+  
+  [ "$NAME" = "" ] && exit 0
+  echo "$NAME" > /etc/hostname
+  /bin/hostname -F /etc/hostname
 
+  [ "$NEWDOMAIN" = "" ] && exit 0
   [ "$OLDDOMAIN" = "" ] && exit 0
 
   /bin/sed -i "s/$OLDNAME/$NAME/g" /etc/hosts
   /bin/sed -i "s/$OLDDOMAIN/$NEWDOMAIN/g" /etc/hosts
-
-   echo "$NAME" > /etc/hostname
-  /bin/hostname -F /etc/hostname
-
+	
 fi
 exit 0
+
