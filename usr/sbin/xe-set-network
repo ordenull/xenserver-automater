@@ -29,7 +29,8 @@ iface eth0 inet static
 EOF
 
 # update hosts
-env HOSTNAME=`hostname -s` IP=$IP perl -pi -e 's/^(\d+\.\d+\.\d+\.\d+)(\s+$ENV{HOSTNAME})/$ENV{IP}$2/' /etc/hosts
+# host file is altered in xe-set-hostanme now
+#env HOSTNAME=`hostname -s` IP=$IP perl -pi -e 's/^(\d+\.\d+\.\d+\.\d+)(\s+$ENV{HOSTNAME})/$ENV{IP}$2/' /etc/hosts
 
 /etc/init.d/networking restart
 
