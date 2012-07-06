@@ -13,7 +13,6 @@ DM=`$XENSTOREREAD vm-data/dm`
 [ "$GW" = "" ] && exit 0
 [ "$NM" = "" ] && exit 0
 [ "$NS" = "" ] && exit 0
-[ "$DM" = "" ] && exit 0
 
 cat << EOF > /etc/network/interfaces
 auto lo
@@ -25,12 +24,11 @@ iface eth0 inet static
         netmask $NM
         gateway $GW
         dns-nameservers $NS
-	dns-search $DM
 EOF
 
-# update hosts
-# host file is altered in xe-set-hostanme now
-#env HOSTNAME=`hostname -s` IP=$IP perl -pi -e 's/^(\d+\.\d+\.\d+\.\d+)(\s+$ENV{HOSTNAME})/$ENV{IP}$2/' /etc/hosts
+if [ ! "$DM" = "" ]; then
+  echo "        dns-search $DM" >> /etc/network/interfaces
+fi
 
 /etc/init.d/networking restart
 
