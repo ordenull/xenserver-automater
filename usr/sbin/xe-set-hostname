@@ -1,27 +1,27 @@
 #!/bin/bash
+
 XENSTOREREAD=`which xenstore-read`
 if [ -e $XENSTOREREAD ]; then
-  NAME=`$XENSTOREREAD name`
-  DOMAIN=`$XENSTOREREAD vm-data/dm`
+
+  # Extract the name of the server set in XenCenter
+  DOMAIN=`$XENSTOREREAD read domid`
+  NAME=`$XENSTOREREAD /local/domain/${DOMAIN}/name`
+
+  # We're going to keep the same domain that's in the template
+  DOMAIN=`hostname -d`
 
   [ "$NAME" = "" ] && exit 0
-  echo "$NAME" > /etc/hostname
+
+  echo "${NAME}" > /etc/hostname
   /bin/hostname -F /etc/hostname
 
-  #if domain info wasn't passed in then dont alter the hosts file
-  [ "$DOMAIN" = "" ] && exit 0
+  # Update the hosts file with the FQDN if the domain name was set in the template
+  if [ "$DOMAIN" = "" ]; then
+    sed -i "s/127.0.1.1\s\+.\+/127.0.1.1\t${NAME}/g" /etc/hosts
+  else
+    sed -i "s/127.0.1.1\s\+.\+/127.0.1.1\t${NAME}.${DOMAIN}\t${NAME}/g" /etc/hosts
+  fi
 
-  # read passed in IP address if it exists
-  IP=`$XENSTOREREAD vm-data/ip`
-
-  # otherwise just use the ip address that the machine has already
-  if [ $IP = "" ]; then IP=`ip addr list eth0 | grep "inet " | cut -d' ' -f6 | cut -d/ -f1`; fi
-
-cat << EOF > /etc/hosts
-127.0.0.1	localhost
-$IP	$NAME.$DOMAIN	$NAME	
-EOF
-	
 fi
 exit 0
 
